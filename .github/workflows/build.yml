@@ -21,23 +21,20 @@ jobs:
       matrix:
         include:
           - RELEASE_PACKAGE: gitlab-ce
-            RELEASE_VERSION: 17.5.0-ce.0
-            PUSH_TAGS: 17.5.0-ce.0,17.5.0-ce,17.5-ce,17-ce,ce,latest
-          - RELEASE_PACKAGE: gitlab-ee
-            RELEASE_VERSION: 17.5.0-ee.0
-            PUSH_TAGS: 17.5.0-ee.0,17.5.0-ee,17.5-ee,17-ee,ee
+            RELEASE_VERSION: 17.4.2-ce.0
+            PUSH_TAGS: 17.4.2-ce.0,17.4.2-ce,17.4-ce,17-ce,ce,latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: docker login to docker.io
+      - name: docker login to ghcr.io
         uses: docker/login-action@v2
         # Only builds on the main branch will trigger the push, and forked repositories are excluded
-        if: github.repository_owner == 'zengxs' && github.ref == 'refs/heads/main'
+        if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/17.4'
         with:
-          registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup binfmt-support
         uses: docker/setup-qemu-action@v2
@@ -49,7 +46,7 @@ jobs:
       - name: Generate tags
         id: generate-tags
         run: |
-          push_tags=$(echo ${{ matrix.PUSH_TAGS }} | tr ',' '\n' | xargs -I {} echo "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/gitlab:{}" | tr '\n' ',')
+          push_tags=$(echo ${{ matrix.PUSH_TAGS }} | tr ',' '\n' | xargs -I {} echo 'ghcr.io/orographiclift/gitlab:{}' | tr '\n' ',')
           echo "push_tags=${push_tags}" >> $GITHUB_ENV
 
       # Generate the push tags for arm64 image (add '-arm64' suffix to the push tags)
@@ -64,7 +61,7 @@ jobs:
         with:
           context: .
           # Only builds on the main branch will trigger the push, and forked repositories are excluded
-          push: ${{ github.repository_owner == 'zengxs' && github.ref == 'refs/heads/main' }}
+          push: ${{ github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/17.4' }}
           tags: ${{ env.push_arm64_tags }}
           platforms: linux/arm64
           # Disable provenance generation to resolve issue #82
@@ -77,7 +74,7 @@ jobs:
       # Create multi-arch manifest (x86-64 reuses official image, arm64 uses the image built in the previous step)
       - name: Docker multi-arch manifest
         # Only builds on the main branch will trigger the push, and forked repositories are excluded
-        if: github.repository_owner == 'zengxs' && github.ref == 'refs/heads/main'
+        if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/17.4'
         shell: python
         env:
           RELEASE_PACKAGE: ${{ matrix.RELEASE_PACKAGE }}
