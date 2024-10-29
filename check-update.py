@@ -66,7 +66,7 @@ def get_latest_version(branch):
     versions = [result["name"] for result in results]
 
     # filter out non-semver versions
-    versions = [version for version in versions if (semver.VersionInfo.is_valid(version) && semver.startswith(branch))]
+    versions = [version for version in versions if (semver.VersionInfo.is_valid(version) and semver.startswith(branch))]
 
     # sort versions and get the latest one
     versions = sorted(versions, key=semver.VersionInfo.parse, reverse=True)
