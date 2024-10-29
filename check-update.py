@@ -27,7 +27,7 @@ BUILD_YML_PATH = BASE_DIR / ".github/workflows/build.yml"
 
 def main():
     current_version = get_current_version()
-    latest_version = get_latest_version()
+    latest_version = get_latest_version(os.environ.GITHUB_REF_NAME.split("/")[-1])
 
     if semver.compare(current_version, latest_version) < 0:
         print(
@@ -53,7 +53,7 @@ def get_current_version():
     return current_version
 
 
-def get_latest_version():
+def get_latest_version(branch):
     r = requests.get(
         "https://hub.docker.com/v2/namespaces/gitlab/repositories/gitlab-ce/tags?page_size=100",
         headers={
@@ -66,7 +66,7 @@ def get_latest_version():
     versions = [result["name"] for result in results]
 
     # filter out non-semver versions
-    versions = [version for version in versions if semver.VersionInfo.is_valid(version)]
+    versions = [version for version in versions if (semver.VersionInfo.is_valid(version) && semver.startswith(branch))]
 
     # sort versions and get the latest one
     versions = sorted(versions, key=semver.VersionInfo.parse, reverse=True)
