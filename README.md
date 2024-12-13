@@ -16,6 +16,8 @@
 [dockerhub-badge-latest-version-ce]: https://img.shields.io/docker/v/zengxs/gitlab/ce?logo=docker
 [dockerhub-badge-latest-version-ee]: https://img.shields.io/docker/v/zengxs/gitlab/ee?logo=docker
 
+Fork of https://github.com/zengxs/gitlab-arm64 to not build just the latest branch, I don't always want to be on the bleeding edge of gitlab and don't mind staying a few releases back.
+
 ## Overview
 
 As the tech landscape evolves, ARM servers are gaining traction for their compact design, cost-effectiveness, and energy efficiency. Major cloud providers, including AWS, Azure, Google Cloud, Oracle Cloud, and Huawei Cloud, are expanding their offerings to include ARM-based solutions.
