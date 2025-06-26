@@ -50,7 +50,7 @@ jobs:
       - name: Generate ARM64 tags
         id: generate-arm64-tags
         run: |
-          push_tags=$(echo ${{ matrix.PUSH_TAGS }} | tr ',' '\n' | xargs -I {} echo 'ghcr.io/orographiclift/gitlab:{}' | tr '\n' ',')
+          push_arm64_tags=$(echo ${{ env.push_tags }} | tr ',' '\n' | xargs -I {} echo "{}-arm64" | tr '\n' ',')
           echo "push_arm64_tags=${push_arm64_tags}" >> $GITHUB_ENV
 
       - name: Build and push ARM64 image
