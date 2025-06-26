@@ -32,9 +32,9 @@ jobs:
         # Only builds on the main branch will trigger the push, and forked repositories are excluded
         if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.0'
         with:
-          registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup docker buildx
         uses: docker/setup-buildx-action@v3
@@ -43,7 +43,7 @@ jobs:
       - name: Generate tags
         id: generate-tags
         run: |
-          push_tags=$(echo ${{ matrix.PUSH_TAGS }} | tr ',' '\n' | xargs -I {} echo "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/gitlab:{}" | tr '\n' ',')
+          push_tags=$(echo ${{ matrix.PUSH_TAGS }} | tr ',' '\n' | xargs -I {} echo 'ghcr.io/orographiclift/gitlab:{}' | tr '\n' ',')
           echo "push_tags=${push_tags}" >> $GITHUB_ENV
 
       # Generate the push tags for arm64 image (add '-arm64' suffix to the push tags)
