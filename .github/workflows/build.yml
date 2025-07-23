@@ -21,8 +21,8 @@ jobs:
       matrix:
         include:
           - RELEASE_PACKAGE: gitlab-ce
-            RELEASE_VERSION: 18.0.4-ce.0
-            PUSH_TAGS: 18.0.4-ce.0,18.0.4-ce,18.0-ce,18-ce,ce,latest
+            RELEASE_VERSION: 18.1.3-ce.0
+            PUSH_TAGS: 18.1.3-ce.0,18.1.3-ce,18.1-ce,18-ce,ce,latest
 
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - name: docker login to ghcr.io
         uses: docker/login-action@v3
         # Only builds on the main branch will trigger the push, and forked repositories are excluded
-        if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.0'
+        if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.1'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -58,7 +58,7 @@ jobs:
         with:
           context: .
           # Only builds on the main branch will trigger the push, and forked repositories are excluded
-          push: ${{ github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.0' }}
+          push: ${{ github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.1' }}
           tags: ${{ env.push_arm64_tags }}
           platforms: linux/arm64
           # Disable provenance generation to resolve issue #82
@@ -71,7 +71,7 @@ jobs:
       # Create multi-arch manifest (x86-64 reuses official image, arm64 uses the image built in the previous step)
       - name: Docker multi-arch manifest
         # Only builds on the main branch will trigger the push, and forked repositories are excluded
-        if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.0'
+        if: github.repository_owner == 'OrographicLift' && github.ref == 'refs/heads/18.1'
         shell: python
         env:
           RELEASE_PACKAGE: ${{ matrix.RELEASE_PACKAGE }}
