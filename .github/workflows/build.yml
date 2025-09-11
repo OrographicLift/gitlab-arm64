@@ -21,8 +21,8 @@ jobs:
       matrix:
         include:
           - RELEASE_PACKAGE: gitlab-ce
-            RELEASE_VERSION: 18.2.5-ce.0
-            PUSH_TAGS: 18.2.5-ce.0,18.2.5-ce,18.2-ce,18-ce,ce,latest
+            RELEASE_VERSION: 18.2.6-ce.0
+            PUSH_TAGS: 18.2.6-ce.0,18.2.6-ce,18.2-ce,18-ce,ce,latest
 
     steps:
       - uses: actions/checkout@v4
